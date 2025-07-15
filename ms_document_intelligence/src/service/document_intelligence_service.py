@@ -34,4 +34,4 @@ def ocr_service(document_path):
 
 
 #classify_document_service("/Users/leonardojdss/Desktop/projetos/AI-Document-Architecture-Solutions/arquivos-teste/documentos-processuais/Despacho_Judicial_Designação_de_Audiência.docx")
-print(ocr_service("/Users/leonardojdss/Desktop/projetos/AI-Document-Architecture-Solutions/arquivos-teste/contratos/Contrato_de_Representação_Comercial.docx"))
+#print(ocr_service("/Users/leonardojdss/Desktop/projetos/AI-Document-Architecture-Solutions/arquivos-teste/contratos/Contrato_de_Representação_Comercial.docx"))
