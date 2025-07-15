@@ -15,7 +15,7 @@ A empresa não pode criar um segundo e-mail institucional, por restrições téc
 
 # Solução com Azure AI + LangGraph + MCP + PostgreSQL + Blob Storage
 
-![alt text](image.png)
+![alt text](image-1.png)
 
 ## Descrição da Solução
 
