@@ -30,3 +30,13 @@ A solução proposta utiliza uma arquitetura integrada baseada em Azure AI, Lang
 5. **Interface de Usuário**: Usuários podem realizar perguntas e consultas diretamente aos agentes, obtendo respostas rápidas sobre contratos e documentos processuais, sem depender do acesso manual ao e-mail.
 
 Essa arquitetura elimina conflitos de acesso, automatiza a segmentação dos documentos, reduz retrabalho e minimiza o risco de perda ou atraso de informações, tornando o fluxo jurídico mais eficiente e seguro.
+
+# MS-DOCUMENT-INTELLIGENCE
+
+Ligar 
+
+```bash
+cd ms_document_intelligence
+export PYTHONPATH=/Users/leonardojdss/Desktop/projetos/AI-Document-Architecture-Solutions
+uvicorn src.main:app --host 0.0.0.0 --port 8000
+```
