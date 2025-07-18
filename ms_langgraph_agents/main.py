@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from ms_langgraph_agents.controller.api.route import router
+from ms_langgraph_agents.controller.route import router
 
 app = FastAPI()
 

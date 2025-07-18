@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 router = APIRouter()
 
-@router.post("/embedd_documents")
+@router.post("/automation_documents")
 async def embedd_documents(
     file: UploadFile = File(...)
     ):

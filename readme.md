@@ -38,7 +38,7 @@ Ligar
 ```bash
 cd ms_document_intelligence
 export PYTHONPATH=/Users/leonardojdss/Desktop/projetos/AI-Document-Architecture-Solutions
-uvicorn src.main:app --host 0.0.0.0 --port 8000
+uvicorn ms_document_intelligence.src.main:app --host 0.0.0.0 --port 8000
 ```
 
 # MS-LANGGRAPH-INTELLIGENCE
@@ -48,5 +48,5 @@ Ligar
 ```bash
 cd ms_document_intelligence
 export PYTHONPATH=/Users/leonardojdss/Desktop/projetos/AI-Document-Architecture-Solutions
-uvicorn src.main:app --host 0.0.0.0 --port 8000
+uvicorn ms_langgraph_agents.main:app --host 0.0.0.0 --port 8001
 ```

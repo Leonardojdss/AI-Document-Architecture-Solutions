@@ -1,4 +1,4 @@
-from ms_document_intelligence.src.service.document_intelligence_service import classify_document_service, ocr_service
+from ms_document_intelligence.src.service.document_intelligence_service import classify_document_service, ocr_service, send_to_agents_service
 from ms_document_intelligence.src.service.blob_storage_service import create_directory_if_not_exists_service, upload_file_service
 import logging
 
@@ -15,5 +15,7 @@ def analyze_document_usecase(document_path):
 
     ocr_result = ocr_service(document_path)
     logging.info(f"OCR Result: {ocr_result}")
+
+    send_to_agents_result = send_to_agents_service(ocr_result, classification_result["classify_type"])
 
     return classification_result["classify_type"], ocr_result

@@ -8,10 +8,9 @@ from langgraph.graph import MessagesState, END
 from langgraph.types import Command
 from langgraph.prebuilt import create_react_agent
 
-
 llm = ConnectionAzureOpenai.llm_azure_openai()
 
-class NetworkAgentsContracts:
+class NetworkAgents:
 
     @staticmethod
     def prompt(path):
@@ -42,7 +41,7 @@ class NetworkAgentsContracts:
 
         return handoff_tool
 
-    analyze_contracts_agent_prompt = prompt("ms_langgraph_agents/prompt/contrato_analise_prompt.txt")
+    analyze_contracts_agent_prompt = prompt("ms_langgraph_agents/prompt/analise_contratos_prompt.txt")
 
     @staticmethod
     def agent_analyze_contracts():
@@ -50,7 +49,7 @@ class NetworkAgentsContracts:
             model=llm,
             tools=[],
             prompt=(
-                f"{NetworkAgentsContracts.analyze_contracts_agent_prompt}"
+                f"{NetworkAgents.analyze_contracts_agent_prompt}"
             ),
             name="analyze_contracts_agent",
         )
@@ -61,7 +60,7 @@ class NetworkAgentsContracts:
         description="Atribuir tarefa a um agente de análise de contratos.",
     )
 
-    resume_contracts_agent_prompt = prompt("ms_langgraph_agents/prompt/consulta_contratos_prompt.txt")
+    resume_contracts_agent_prompt = prompt("ms_langgraph_agents/prompt/consulta_analise_prompt.txt")
 
     @staticmethod
     def agent_resume_contracts():
@@ -69,7 +68,7 @@ class NetworkAgentsContracts:
             model=llm,
             tools=[],
             prompt=(
-                f"{NetworkAgentsContracts.resume_contracts_agent_prompt}"
+                f"{NetworkAgents.resume_contracts_agent_prompt}"
             ),
             name="resume_contracts_agent",
         )
@@ -82,21 +81,81 @@ class NetworkAgentsContracts:
 
     @staticmethod
     def supervisor_contracts():
-        supervisor_agent = create_react_agent(
+        supervisor_contracts_agent = create_react_agent(
             model=llm,
             tools=[
-            NetworkAgentsContracts.assign_to_analyze_contracts_agent,
-            NetworkAgentsContracts.assign_to_resume_contracts_agent
+            NetworkAgents.assign_to_analyze_contracts_agent,
+            NetworkAgents.assign_to_resume_contracts_agent
             ],
             prompt=(
             "Você é um supervisor responsável por gerenciar dois agentes:\n"
             "- Um agente de análise de contratos. Atribua tarefas relacionadas à análise de contratos para este agente.\n"
             "- Um agente de resumo de contratos. Atribua tarefas relacionadas a responder dúvidas de contratos para este agente.\n"
             "Atribua o trabalho para apenas um agente por vez, não chame agentes em paralelo.\n"
-            "Não execute nenhuma tarefa você mesmo."
+            "Não execute nenhuma tarefa você mesmo." \
+            "ao final responda com o conteúdo do último agente chamado," \
+            "Você receber o ocr de um contrato (então deve enviar para analise ao agente de análise de contratos)" \
+            "ou uma pergunta sobre um contrato (então deve enviar para o agente de resumo de contratos buscar a resposta no banco ou informação no blob)"
             ),
-            name="supervisor"
+            name="supervisor_contracts"
         )
-        return supervisor_agent
+        return supervisor_contracts_agent
 
-# class NetworkAgentsDocuments:
+    analyze_documents_prompt = prompt("ms_langgraph_agents/prompt/analise_documentos_processuais_prompt.txt")
+
+    @staticmethod
+    def agent_analyze_documents():
+        analyze_documents_agent = create_react_agent(
+            model=llm,
+            tools=[],
+            prompt=(
+                f"{NetworkAgents.analyze_documents_prompt}"
+            ),
+            name="analyze_documents_agent",
+        )
+        return analyze_documents_agent
+
+    assign_to_analyze_documents_agent = create_handoff_tool(
+        agent_name="analyze_documents_agent",
+        description="Atribuir tarefa a um agente de análise de documentos.",
+    )
+    resume_documents_prompt = prompt("ms_langgraph_agents/prompt/consulta_documentos_processuais_prompt.txt")
+    
+    @staticmethod
+    def agent_resume_documents():
+        resume_documents_agent = create_react_agent(
+            model=llm,
+            tools=[],
+            prompt=(
+                f"{NetworkAgents.resume_documents_prompt}"
+            ),
+            name="resume_documents_agent",
+        )
+        return resume_documents_agent
+
+    assign_to_resume_documents_agent = create_handoff_tool(
+        agent_name="resume_documents_agent",
+        description="Atribuir tarefa a um agente de resumo de documentos.",
+    )
+
+    @staticmethod
+    def supervisor_documents():
+        supervisor_documents_agent = create_react_agent(
+            model=llm,
+            tools=[
+                NetworkAgents.assign_to_analyze_documents_agent,
+                NetworkAgents.assign_to_resume_documents_agent
+            ],
+            prompt=(
+                "Você é um supervisor responsável por gerenciar dois agentes:\n"
+                "- Um agente de análise de documentos. Atribua tarefas relacionadas à análise de documentos para este agente.\n"
+                "- Um agente de resumo de documentos. Atribua tarefas relacionadas a responder dúvidas de documentos para este agente.\n"
+                "Atribua o trabalho para apenas um agente por vez, não chame agentes em paralelo.\n"
+                "Não execute nenhuma tarefa você mesmo." \
+                "ao final responda com o conteúdo do último agente chamado" \
+                "Você receber o ocr de um documento (então deve enviar para analise ao agente de análise de documentos)" \
+                "ou uma pergunta sobre um documento (então deve enviar para o agente de resumo de documentos buscar a resposta no banco ou informação no blob)"
+            ),
+            name="supervisor_documents"
+        )
+        return supervisor_documents_agent

@@ -1,6 +1,10 @@
 from ms_document_intelligence.src.infrastructure.connection_document_intelligence import ConnectionDocumentIntelligence
 from azure.ai.documentintelligence.models import AnalyzeDocumentRequest
+import requests
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 client = ConnectionDocumentIntelligence.connect_document_intelligence()
 
@@ -31,6 +35,27 @@ def ocr_service(document_path):
         result = poller.result()
    
     return result.content
+
+def send_to_agents_service(ocr_document, type_document):
+    base_url= os.getenv("BASE_URL_AGENT_LANGGRAPH")
+    if type_document == "contratos":
+        url = f"{base_url}/ms_langgraph_agents/contracts"
+        json = {
+                "text": f"{ocr_document}"
+                }
+        request = requests.post(
+            url= url,
+            json=json
+        )
+    else:
+        url = f"{base_url}/ms_langgraph_agents/documents"
+        json = {
+                "text": f"{ocr_document}"
+                }
+        request = requests.post(    
+            url= url,
+            json=json
+        )
 
 
 #classify_document_service("/Users/leonardojdss/Desktop/projetos/AI-Document-Architecture-Solutions/arquivos-teste/documentos-processuais/Despacho_Judicial_Designação_de_Audiência.docx")
