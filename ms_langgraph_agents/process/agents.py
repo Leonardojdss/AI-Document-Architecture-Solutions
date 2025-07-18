@@ -1,12 +1,48 @@
 from langchain_mcp_adapters.client import MultiServerMCPClient
-from langgraph_supervisor import create_supervisor
-from langchain_core.messages import convert_to_messages
 from langgraph.prebuilt import create_react_agent
 from ms_langgraph_agents.infrastructure.connection_openai import ConnectionAzureOpenai
+from typing import Annotated
+from langchain_core.tools import tool, InjectedToolCallId
+from langgraph.prebuilt import InjectedState, create_react_agent
+from langgraph.graph import MessagesState, END
+from langgraph.types import Command
+from langgraph.prebuilt import create_react_agent
+
 
 llm = ConnectionAzureOpenai.llm_azure_openai()
 
-class NetworkAgents:
+class NetworkAgentsContracts:
+
+    @staticmethod
+    def prompt(path):
+        with open(path, "r") as file:
+            return file.read()
+
+    @staticmethod
+    def create_handoff_tool(*, agent_name: str, description: str | None = None):
+        name = f"transfer_to_{agent_name}"
+        description = description or f"Ask {agent_name} for help."
+
+        @tool(name, description=description)
+        def handoff_tool(
+            state: Annotated[MessagesState, InjectedState],
+            tool_call_id: Annotated[str, InjectedToolCallId],
+        ) -> Command:
+            tool_message = {
+                "role": "tool",
+                "content": f"Successfully transferred to {agent_name}",
+                "name": name,
+                "tool_call_id": tool_call_id,
+            }
+            return Command(
+                goto=agent_name,  
+                update={**state, "messages": state["messages"] + [tool_message]},  
+                graph=Command.PARENT,  
+            )
+
+        return handoff_tool
+
+    analyze_contracts_agent_prompt = prompt("ms_langgraph_agents/prompt/contrato_analise_prompt.txt")
 
     @staticmethod
     def agent_analyze_contracts():
@@ -14,11 +50,18 @@ class NetworkAgents:
             model=llm,
             tools=[],
             prompt=(
-                "você é um agente de análise de contratos.\n\n"
+                f"{NetworkAgentsContracts.analyze_contracts_agent_prompt}"
             ),
             name="analyze_contracts_agent",
         )
         return analyze_contracts_agent
+
+    assign_to_analyze_contracts_agent = create_handoff_tool(
+        agent_name="analyze_contracts_agent",
+        description="Atribuir tarefa a um agente de análise de contratos.",
+    )
+
+    resume_contracts_agent_prompt = prompt("ms_langgraph_agents/prompt/consulta_contratos_prompt.txt")
 
     @staticmethod
     def agent_resume_contracts():
@@ -26,21 +69,34 @@ class NetworkAgents:
             model=llm,
             tools=[],
             prompt=(
-                "você é um agente de resumo de contratos.\n\n"
+                f"{NetworkAgentsContracts.resume_contracts_agent_prompt}"
             ),
             name="resume_contracts_agent",
         )
         return resume_contracts_agent
+    
+    assign_to_resume_contracts_agent = create_handoff_tool(
+        agent_name="resume_contracts_agent",
+        description="Atribuir tarefa a um agente de resumo de contratos.",
+    )
 
     @staticmethod
-    def supervisor():
-        supervisor = create_supervisor(
+    def supervisor_contracts():
+        supervisor_agent = create_react_agent(
             model=llm,
-            agents=[Agents.agent_analyze_contracts(), Agents.agent_resume_contracts()],
+            tools=[
+            NetworkAgentsContracts.assign_to_analyze_contracts_agent,
+            NetworkAgentsContracts.assign_to_resume_contracts_agent
+            ],
             prompt=(
-                "Você é um supervisor de agentes, deve decidir se envia a tarefa para o analisador ou resumidor.\n\n"
-        ),
-        add_handoff_back_messages=True,
-        output_mode="full_history",
-        ).compile()
-        return supervisor
+            "Você é um supervisor responsável por gerenciar dois agentes:\n"
+            "- Um agente de análise de contratos. Atribua tarefas relacionadas à análise de contratos para este agente.\n"
+            "- Um agente de resumo de contratos. Atribua tarefas relacionadas a responder dúvidas de contratos para este agente.\n"
+            "Atribua o trabalho para apenas um agente por vez, não chame agentes em paralelo.\n"
+            "Não execute nenhuma tarefa você mesmo."
+            ),
+            name="supervisor"
+        )
+        return supervisor_agent
+
+# class NetworkAgentsDocuments:
