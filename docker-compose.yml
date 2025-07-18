@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  ms_document_intelligence:
+    build:
+      context: ./ms_document_intelligence
+      dockerfile: dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../.env
+    volumes:
+      - ./ms_document_intelligence/src:/ms_embedding_documents
+    restart: unless-stopped
