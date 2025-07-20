@@ -50,3 +50,27 @@ cd ms_document_intelligence
 export PYTHONPATH=/Users/leonardojdss/Desktop/projetos/AI-Document-Architecture-Solutions
 uvicorn ms_langgraph_agents.main:app --host 0.0.0.0 --port 8001
 ```
+
+# MS-MCP-DATABASE
+
+deve criar essas tabelas 
+
+CREATE TABLE documents (
+    id SERIAL NOT NULL PRIMARY KEY,
+    date DATE NOT NULL,
+	document_name TEXT NOT NULL,
+    resume_ai TEXT NOT NULL
+);
+
+CREATE TABLE contracts (
+    id SERIAL NOT NULL PRIMARY KEY,
+    date DATE NOT NULL,
+	document_name TEXT NOT NULL,
+    resume_ai TEXT NOT NULL
+);
+
+```bash
+cd ms_document_intelligence
+export PYTHONPATH=/Users/leonardojdss/Desktop/projetos/AI-Document-Architecture-Solutions
+uvicorn ms_mcp_database.server:mcp_app --host 0.0.0.0 --port 8002
+```

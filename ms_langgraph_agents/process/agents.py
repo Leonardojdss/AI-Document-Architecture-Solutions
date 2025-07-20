@@ -1,4 +1,4 @@
-from langchain_mcp_adapters.client import MultiServerMCPClient
+from ms_langgraph_agents.process.mcp_tools import mcp_database
 from langgraph.prebuilt import create_react_agent
 from ms_langgraph_agents.infrastructure.connection_openai import ConnectionAzureOpenai
 from typing import Annotated
@@ -9,6 +9,7 @@ from langgraph.types import Command
 from langgraph.prebuilt import create_react_agent
 
 llm = ConnectionAzureOpenai.llm_azure_openai()
+mcp_tools = mcp_database()
 
 class NetworkAgents:
 
@@ -47,7 +48,7 @@ class NetworkAgents:
     def agent_analyze_contracts():
         analyze_contracts_agent = create_react_agent(
             model=llm,
-            tools=[],
+            tools=mcp_tools,
             prompt=(
                 f"{NetworkAgents.analyze_contracts_agent_prompt}"
             ),
@@ -66,7 +67,7 @@ class NetworkAgents:
     def agent_resume_contracts():
         resume_contracts_agent = create_react_agent(
             model=llm,
-            tools=[],
+            tools=mcp_tools,
             prompt=(
                 f"{NetworkAgents.resume_contracts_agent_prompt}"
             ),
@@ -107,7 +108,7 @@ class NetworkAgents:
     def agent_analyze_documents():
         analyze_documents_agent = create_react_agent(
             model=llm,
-            tools=[],
+            tools=mcp_tools,
             prompt=(
                 f"{NetworkAgents.analyze_documents_prompt}"
             ),
@@ -125,7 +126,7 @@ class NetworkAgents:
     def agent_resume_documents():
         resume_documents_agent = create_react_agent(
             model=llm,
-            tools=[],
+            tools=mcp_tools,
             prompt=(
                 f"{NetworkAgents.resume_documents_prompt}"
             ),

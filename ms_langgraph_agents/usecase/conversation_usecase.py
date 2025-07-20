@@ -52,9 +52,3 @@ def conversation_documents_usecase(input_message):
             return str(last_message)
     
     return "Nenhuma resposta encontrada"
-
-# teste
-if __name__ == "__main__":
-    input_message = "o que é um documento processual?"
-    response = conversation_documents_usecase(input_message)
-    print(response)

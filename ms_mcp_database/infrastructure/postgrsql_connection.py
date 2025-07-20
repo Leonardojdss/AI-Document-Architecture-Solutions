@@ -1,7 +1,7 @@
-
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import Engine, Connection
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 
@@ -24,6 +24,7 @@ class PostgreSQLConnection:
         connection_string = f"postgresql://{self.username}:{self.password}@{self.host}:{self.port}/{self.database}"
         self.engine: Engine = create_engine(connection_string, echo=False, future=True)
         self.conn: Connection | None = None
+        self.session = sessionmaker(bind=self.engine)
 
     def connect(self):
         try:
@@ -69,6 +70,9 @@ class PostgreSQLConnection:
             print(f"Falha no teste de conexão: {e}")
             return False
         
+    def get_session(self):
+        return self.session()
+
 # teste de conexão
 if __name__ == "__main__":
     db = PostgreSQLConnection()
