@@ -1,6 +1,6 @@
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
-def mcp_database():
+async def mcp_database():
     client = MultiServerMCPClient(
         {
             "database and blob": {
@@ -9,6 +9,6 @@ def mcp_database():
             }
         }
     )
-    tools = client.get_tools()
+    tools = await client.get_tools()
     return tools
 

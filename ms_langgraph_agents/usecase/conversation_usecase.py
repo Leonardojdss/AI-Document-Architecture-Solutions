@@ -1,11 +1,11 @@
 from ms_langgraph_agents.process.graph import Graph
 from ms_langgraph_agents.services.messages_services import pretty_print_messages
 
-def conversation_contracts_usecase(input_message):
+async def conversation_contracts_usecase(input_message):
 
-    graph_supervisor_contracts = Graph.contracts_supervisor_graph()
+    graph_supervisor_contracts = await Graph.contracts_supervisor_graph()
 
-    for chunk in graph_supervisor_contracts.stream(
+    for chunk in graph_supervisor_contracts.astream(
     {
         "messages": [
             {
@@ -27,10 +27,10 @@ def conversation_contracts_usecase(input_message):
     
     return "Nenhuma resposta encontrada"
 
-def conversation_documents_usecase(input_message):
-    graph_supervisor_documents = Graph.document_supervisor_graph()
+async def conversation_documents_usecase(input_message):
+    graph_supervisor_documents = await Graph.document_supervisor_graph()
 
-    for chunk in graph_supervisor_documents.stream(
+    async for chunk in graph_supervisor_documents.astream(
         {
             "messages": [
                 {
@@ -43,7 +43,6 @@ def conversation_documents_usecase(input_message):
         pretty_print_messages(chunk, last_message=True)
 
     final_message_history = chunk["supervisor_documents"]["messages"]
-    #print(final_message_history)
     if final_message_history and len(final_message_history) > 0:
         last_message = final_message_history[-1]
         if hasattr(last_message, 'content'):

@@ -9,7 +9,6 @@ from langgraph.types import Command
 from langgraph.prebuilt import create_react_agent
 
 llm = ConnectionAzureOpenai.llm_azure_openai()
-mcp_tools = mcp_database()
 
 class NetworkAgents:
 
@@ -45,13 +44,13 @@ class NetworkAgents:
     analyze_contracts_agent_prompt = prompt("ms_langgraph_agents/prompt/analise_contratos_prompt.txt")
 
     @staticmethod
-    def agent_analyze_contracts():
+    async def agent_analyze_contracts():
+        tools = await mcp_database()
+        print("ferramentas",tools)  # Debugging line to check tools
         analyze_contracts_agent = create_react_agent(
             model=llm,
-            tools=mcp_tools,
-            prompt=(
-                f"{NetworkAgents.analyze_contracts_agent_prompt}"
-            ),
+            tools=tools,
+            prompt=NetworkAgents.analyze_contracts_agent_prompt,
             name="analyze_contracts_agent",
         )
         return analyze_contracts_agent
@@ -64,13 +63,13 @@ class NetworkAgents:
     resume_contracts_agent_prompt = prompt("ms_langgraph_agents/prompt/consulta_analise_prompt.txt")
 
     @staticmethod
-    def agent_resume_contracts():
+    async def agent_resume_contracts():
+        tools = await mcp_database()
+        print("ferramentas",tools)  # Debugging line to check tools
         resume_contracts_agent = create_react_agent(
             model=llm,
-            tools=mcp_tools,
-            prompt=(
-                f"{NetworkAgents.resume_contracts_agent_prompt}"
-            ),
+            tools=tools,
+            prompt=NetworkAgents.resume_contracts_agent_prompt,
             name="resume_contracts_agent",
         )
         return resume_contracts_agent
@@ -105,13 +104,13 @@ class NetworkAgents:
     analyze_documents_prompt = prompt("ms_langgraph_agents/prompt/analise_documentos_processuais_prompt.txt")
 
     @staticmethod
-    def agent_analyze_documents():
+    async def agent_analyze_documents():
+        tools = await mcp_database()
+        print("ferramentas", tools)
         analyze_documents_agent = create_react_agent(
             model=llm,
-            tools=mcp_tools,
-            prompt=(
-                f"{NetworkAgents.analyze_documents_prompt}"
-            ),
+            tools=tools,
+            prompt=NetworkAgents.analyze_documents_prompt,
             name="analyze_documents_agent",
         )
         return analyze_documents_agent
@@ -123,13 +122,13 @@ class NetworkAgents:
     resume_documents_prompt = prompt("ms_langgraph_agents/prompt/consulta_documentos_processuais_prompt.txt")
     
     @staticmethod
-    def agent_resume_documents():
+    async def agent_resume_documents():
+        tools = await mcp_database()
+        print("ferramentas", tools)  # Debugging line to check tools
         resume_documents_agent = create_react_agent(
             model=llm,
-            tools=mcp_tools,
-            prompt=(
-                f"{NetworkAgents.resume_documents_prompt}"
-            ),
+            tools=tools,
+            prompt=NetworkAgents.resume_documents_prompt,
             name="resume_documents_agent",
         )
         return resume_documents_agent

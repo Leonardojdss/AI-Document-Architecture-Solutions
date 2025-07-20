@@ -21,7 +21,7 @@ async def documents_route(data: TextInput):
         )
     
     try:
-        response = conversation_documents_usecase(text_input)
+        response = await conversation_documents_usecase(text_input)
         logging.info(f"Response from documents use case: {response}")
         return {"response_agents": response}
     except Exception as e:
