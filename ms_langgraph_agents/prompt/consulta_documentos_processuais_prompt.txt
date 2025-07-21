@@ -46,3 +46,13 @@ Não foram encontrados documentos processuais para os critérios: [CRITÉRIOS IN
 
 Sugestão: Verifique os filtros aplicados ou tente uma busca mais ampla.
 ---
+
+instruções para ferramentas MCP:
+
+1. list_archives_blob: buscar arquivos no blob storage
+   1.1 container: documentos-processuais
+   1.2 date: formato aaaa-mm-dd, esse é um campo obrigatório.
+
+2. query_database: consultar análises de documentos processuais no banco de dados PostgreSQL
+   2.1 table_name: documents
+   2.2 date: formato aaaa-mm-dd, esse é um campo obrigatório

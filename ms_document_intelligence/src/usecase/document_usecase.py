@@ -4,18 +4,18 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-def analyze_document_usecase(document_path):
+def analyze_document_usecase(document_path, documents_name):
 
     classification_result = classify_document_service(document_path)
     logging.info(f"Classification Result: {classification_result}")
 
     path_blob = create_directory_if_not_exists_service(classification_result["classify_type"])
 
-    print(upload_file_service(path_blob, document_path, document_path.split("/")[-1]))
+    upload = upload_file_service(path_blob, document_path, document_path.split("/")[-1])
 
     ocr_result = ocr_service(document_path)
     logging.info(f"OCR Result: {ocr_result}")
 
-    send_to_agents_result = send_to_agents_service(ocr_result, classification_result["classify_type"])
+    send_to_agents_result = send_to_agents_service(ocr_result, classification_result["classify_type"], documents_name)
 
     return classification_result["classify_type"], ocr_result

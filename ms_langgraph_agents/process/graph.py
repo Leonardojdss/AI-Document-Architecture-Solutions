@@ -1,6 +1,7 @@
 from langgraph.graph import StateGraph, START, MessagesState, END
 from ms_langgraph_agents.process.agents import NetworkAgents
 
+
 class Graph:
 
     @staticmethod

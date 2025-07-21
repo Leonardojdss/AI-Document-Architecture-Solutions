@@ -29,7 +29,6 @@ async def embedd_documents(
     
     try:
         suffix = "." + file.filename.split(".")[-1] if "." in file.filename else ""
-        # Cria nome customizado: nome original + data/hora
         base_name = file.filename.rsplit('.', 1)[0] if '.' in file.filename else file.filename
         custom_name = f"{base_name}_{hours_and_date}{suffix}"
         temp_dir = tempfile.gettempdir()
@@ -38,14 +37,18 @@ async def embedd_documents(
             await tmp.write(await file.read())
         logging.info(f"Temporary file created at: {temp_file_path}")
 
-        classify, ocr = analyze_document_usecase(temp_file_path)
+        classify, ocr = analyze_document_usecase(temp_file_path, custom_name)
 
-        os.remove(temp_file_path)  # Clean up the temporary file
-    
-        return {
+        os.remove(temp_file_path)  
+
+        result = {
             "classification": classify,
-            "ocr": ocr        
+            "ocr": ocr,
+            "file_name": custom_name,        
         }
+
+
+        return result
 
     except Exception as e:
         raise HTTPException(

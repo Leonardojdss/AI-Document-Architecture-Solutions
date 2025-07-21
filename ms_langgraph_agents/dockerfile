@@ -1,0 +1,60 @@
+FROM ubuntu:22.04
+
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update package lists and install dependencies
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    curl \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Add deadsnakes PPA for Python 3.12
+RUN add-apt-repository ppa:deadsnakes/ppa -y
+
+# Install Python 3.12 and pip
+RUN apt-get update && apt-get install -y \
+    python3.12 \
+    python3.12-dev \
+    python3-distutils \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Python environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
+
+# Create symbolic links for python commands
+RUN ln -sf /usr/bin/python3.12 /usr/bin/python
+RUN ln -sf /usr/bin/python3.12 /usr/bin/python3
+RUN ln -sf /usr/bin/pip3 /usr/bin/pip
+
+# Create app directory
+
+WORKDIR /app
+
+# Instala pip e distutils para Python 3.12
+RUN curl -O https://bootstrap.pypa.io/get-pip.py && python3.12 get-pip.py
+
+# Install Python dependencies (copy requirements first for better caching)
+COPY requirements.txt .
+RUN python3.12 -m pip install --no-cache-dir -r requirements.txt
+
+# Invalidate cache for source code changes
+ARG CACHEBUST=1
+
+# Copy the entire ms_langgraph_agents directory
+COPY . ./ms_langgraph_agents/
+
+# Copy .env file to the root and the ms_langgraph_agents directory
+COPY .env ./
+COPY .env ./ms_langgraph_agents/
+
+# Expose API port
+EXPOSE 8001
+EXPOSE 8002
+
+# Run the application
+CMD ["python3.12", "-m", "uvicorn", "ms_langgraph_agents.main:app", "--host", "0.0.0.0", "--port", "8001"]

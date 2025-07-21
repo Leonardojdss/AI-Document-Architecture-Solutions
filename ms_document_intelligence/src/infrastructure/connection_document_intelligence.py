@@ -6,6 +6,8 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
+load_dotenv()
+
 endpoint = os.getenv("YOUR_FORM_RECOGNIZER_ENDPOINT")
 key = os.getenv("YOUR_FORM_RECOGNIZER_KEY")
 

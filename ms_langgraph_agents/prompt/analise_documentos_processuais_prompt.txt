@@ -52,3 +52,14 @@ PRÓXIMOS PASSOS:
 ---
 
 Ao finalizar, salve a análise no banco de dados via tool mcp.
+
+
+instruções para ferramentas MCP:
+
+1. save analyze to database
+
+1.1 Receber o texto completo dos documentos enviado pelo usuário e analisar. sempre salvar as análises no banco.
+1.2 Salvar a análise no banco de dados.
+    table_name: documents
+    document_name: [Nome do documento]
+    analyze_data: [Análise do documento]

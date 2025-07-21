@@ -36,12 +36,13 @@ def ocr_service(document_path):
    
     return result.content
 
-def send_to_agents_service(ocr_document, type_document):
+def send_to_agents_service(ocr_document, type_document, documents_name):
     base_url= os.getenv("BASE_URL_AGENT_LANGGRAPH")
     if type_document == "contratos":
         url = f"{base_url}/ms_langgraph_agents/contracts"
         json = {
-                "text": f"{ocr_document}"
+                "text": f"{ocr_document}",
+                "documents_name": documents_name
                 }
         request = requests.post(
             url= url,
@@ -50,7 +51,8 @@ def send_to_agents_service(ocr_document, type_document):
     else:
         url = f"{base_url}/ms_langgraph_agents/documents"
         json = {
-                "text": f"{ocr_document}"
+                "text": f"{ocr_document}",
+                "documents_name": documents_name
                 }
         request = requests.post(    
             url= url,

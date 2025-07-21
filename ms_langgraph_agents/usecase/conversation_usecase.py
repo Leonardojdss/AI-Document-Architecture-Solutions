@@ -1,11 +1,14 @@
 from ms_langgraph_agents.process.graph import Graph
 from ms_langgraph_agents.services.messages_services import pretty_print_messages
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 async def conversation_contracts_usecase(input_message):
 
     graph_supervisor_contracts = await Graph.contracts_supervisor_graph()
 
-    for chunk in graph_supervisor_contracts.astream(
+    async for chunk in graph_supervisor_contracts.astream(
     {
         "messages": [
             {

@@ -19,3 +19,13 @@ Análise do contrato recebido:
 Caso o texto do contrato esteja incompleto ou ilegível:
 ---
 O texto do contrato enviado está incompleto ou ilegível. Por favor, envie o documento completo para análise.
+
+instruções para ferramentas MCP:
+
+1. save analyze to database
+
+1.1 Receber o texto completo do contrato enviado pelo usuário e analisar, sempre salvar as analises no banco
+1.2 Salvar a análise no banco de dados.
+    table_name: contracts
+    document_name: [Nome do documento]
+    analyze_data: [Análise do contrato]

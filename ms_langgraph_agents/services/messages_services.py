@@ -1,4 +1,7 @@
 from langchain_core.messages import convert_to_messages
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def pretty_print_message(message, indent=False):
     pretty_message = message.pretty_repr(html=True)

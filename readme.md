@@ -33,7 +33,7 @@ Essa arquitetura elimina conflitos de acesso, automatiza a segmentação dos doc
 
 # MS-DOCUMENT-INTELLIGENCE
 
-Ligar 
+### Ligar 
 
 ```bash
 cd ms_document_intelligence
@@ -73,4 +73,10 @@ CREATE TABLE contracts (
 cd ms_document_intelligence
 export PYTHONPATH=/Users/leonardojdss/Desktop/projetos/AI-Document-Architecture-Solutions
 uvicorn ms_mcp_database.server:mcp_app --host 0.0.0.0 --port 8002
+```
+
+### Testar as Ferramentas MCP
+
+```bash
+npx @modelcontextprotocol/inspector
 ```

@@ -46,7 +46,6 @@ class NetworkAgents:
     @staticmethod
     async def agent_analyze_contracts():
         tools = await mcp_database()
-        print("ferramentas",tools)  # Debugging line to check tools
         analyze_contracts_agent = create_react_agent(
             model=llm,
             tools=tools,
@@ -65,7 +64,6 @@ class NetworkAgents:
     @staticmethod
     async def agent_resume_contracts():
         tools = await mcp_database()
-        print("ferramentas",tools)  # Debugging line to check tools
         resume_contracts_agent = create_react_agent(
             model=llm,
             tools=tools,
@@ -95,7 +93,8 @@ class NetworkAgents:
             "Não execute nenhuma tarefa você mesmo." \
             "ao final responda com o conteúdo do último agente chamado," \
             "Você receber o ocr de um contrato (então deve enviar para analise ao agente de análise de contratos)" \
-            "ou uma pergunta sobre um contrato (então deve enviar para o agente de resumo de contratos buscar a resposta no banco ou informação no blob)"
+            "ou uma pergunta sobre um contrato (então deve enviar para o agente de resumo de contratos buscar a resposta no banco ou informação no blob)" \
+            "você deve sempre trazer as respostas dos agentes chamados, não execute tarefas você mesmo."
             ),
             name="supervisor_contracts"
         )
@@ -106,7 +105,6 @@ class NetworkAgents:
     @staticmethod
     async def agent_analyze_documents():
         tools = await mcp_database()
-        print("ferramentas", tools)
         analyze_documents_agent = create_react_agent(
             model=llm,
             tools=tools,
@@ -124,7 +122,6 @@ class NetworkAgents:
     @staticmethod
     async def agent_resume_documents():
         tools = await mcp_database()
-        print("ferramentas", tools)  # Debugging line to check tools
         resume_documents_agent = create_react_agent(
             model=llm,
             tools=tools,
@@ -154,7 +151,8 @@ class NetworkAgents:
                 "Não execute nenhuma tarefa você mesmo." \
                 "ao final responda com o conteúdo do último agente chamado" \
                 "Você receber o ocr de um documento (então deve enviar para analise ao agente de análise de documentos)" \
-                "ou uma pergunta sobre um documento (então deve enviar para o agente de resumo de documentos buscar a resposta no banco ou informação no blob)"
+                "ou uma pergunta sobre um documento (então deve enviar para o agente de resumo de documentos buscar a resposta no banco ou informação no blob)" \
+                "você deve sempre trazer as respostas dos agentes chamados, não execute tarefas você mesmo."
             ),
             name="supervisor_documents"
         )
