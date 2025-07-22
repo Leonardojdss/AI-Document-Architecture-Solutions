@@ -51,16 +51,17 @@ Antes de clonar o repositório, siga estes passos para preparar os serviços ess
 6. Repita o processo para criar o container `documentos-processuais`.
 
 Esses containers serão usados para armazenar os arquivos classificados.
+### 2. Treinamento do Modelo de Classificação com Documentos Fictícios
 
-### 2. Treinamento do Modelo de Classificação com Documentos de Exemplo
+Utilize os documentos fictícios presentes na pasta `arquivos_treinamento_ficticios` para treinar o modelo de classificação:
 
-1. Organize exemplos de contratos e documentos processuais em pastas separadas.
-2. Faça upload dos exemplos para um container de treinamento no Blob Storage.
+1. Os arquivos fictícios estão em duas subpastas: `contratos` e `documentos-processuais`.
+2. Faça upload desses exemplos para um container de treinamento no Azure Blob Storage.
 3. No Portal Azure, acesse o serviço **Azure Document Intelligence**.
 4. Abra o **Document Intelligence Studio**.
 5. Crie um novo projeto de treinamento e selecione o container de treinamento.
 6. Defina dois tipos de documento: `contratos` e `documentos-processuais`.
-7. Associe os exemplos de cada pasta ao respectivo tipo.
+7. Associe os exemplos de cada subpasta ao respectivo tipo.
 8. Inicie o treinamento do modelo diretamente pelo Studio.
 9. Após o treinamento, publique o modelo para uso na classificação automática.
 
